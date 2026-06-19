@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Palaniappa Mess — Authentic South Indian Meals · Pudukkottai</title>
+<meta name="description" content="Palaniappa Mess, Pudukkottai — home-style South Indian meals, biryani, tiffin & non-veg specials served fresh every day. Order, call or get directions.">
+<meta name="theme-color" content="#C8102E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Hind+Madurai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Brand palette: crimson red + gold (matches shop signboard).
+     Variable names kept from template; values are red/gold. */
+  :root{
+    --green:#C8102E;        /* primary crimson */
+    --green-deep:#6E0A18;   /* deep maroon */
+    --leaf:#A0142A;         /* mid crimson */
+    --lime:#E8B84B;         /* gold accent */
+    --gold:#E0A435;
+    --gold-deep:#B27D1A;
+    --saffron:#D63B1F;      /* warm red-orange */
+    --cream:#FFF7F1;
+    --paper:#FFFFFF;
+    --ink:#2A0E12;
+    --ink-soft:#7A5258;
+    --line:#F1DED6;
+    --shadow:0 24px 60px -22px rgba(7,46,22,.45);
+    --r-lg:26px;
+    --r-md:18px;
+    --r-sm:12px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Plus Jakarta Sans','Hind Madurai',system-ui,sans-serif;
+    background:var(--cream);color:var(--ink);line-height:1.62;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  body.ta-mode{font-family:'Hind Madurai','Plus Jakarta Sans',sans-serif}
+  .ta-font{font-family:'Hind Madurai',sans-serif}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  ::selection{background:var(--lime);color:var(--green-deep)}
+
+  /* ---------- Scroll progress ---------- */
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:200;
+    background:linear-gradient(90deg,var(--gold),var(--saffron));transition:width .1s linear}
+
+  /* ---------- Loader ---------- */
+  .loader{position:fixed;inset:0;z-index:300;background:var(--green-deep);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    transition:opacity .7s ease,visibility .7s ease}
+  .loader.done{opacity:0;visibility:hidden}
+  .loader-plate{width:74px;height:74px;border-radius:50%;
+    border:3px solid rgba(255,255,255,.18);border-top-color:var(--gold);
+    animation:spin 1s linear infinite}
+  .loader-name{color:#fff;font-family:'Fraunces',serif;font-size:22px;letter-spacing:.5px;
+    opacity:0;animation:fadeUp .8s ease .2s forwards}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ---------- Nav ---------- */
+  .nav{position:sticky;top:0;z-index:100;transition:padding .3s ease}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    margin:14px auto;max-width:1140px;padding:10px 14px 10px 20px;
+    background:rgba(255,255,255,.72);backdrop-filter:blur(16px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.6);border-radius:60px;
+    box-shadow:0 10px 34px -16px rgba(7,46,22,.4);transition:all .3s ease}
+  .nav.scrolled .nav-inner{background:rgba(255,255,255,.92)}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand-mark{width:42px;height:42px;border-radius:13px;flex-shrink:0;
+    background:linear-gradient(140deg,var(--leaf),var(--green-deep));
+    display:flex;align-items:center;justify-content:center;font-size:21px;
+    box-shadow:0 6px 16px -6px var(--green);position:relative;overflow:hidden}
+  .brand-mark::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4),transparent 60%)}
+  .brand-txt{display:flex;flex-direction:column;line-height:1.1}
+  .brand-txt b{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:var(--green-deep)}
+  .brand-txt small{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink-soft)}
+  .nav-links{display:flex;gap:6px;align-items:center}
+  .nav-links a{font-size:14.5px;font-weight:600;color:var(--ink-soft);text-decoration:none;
+    padding:9px 15px;border-radius:30px;transition:all .2s}
+  .nav-links a:hover{color:var(--green);background:rgba(200,16,46,.08)}
+  .nav-actions{display:flex;align-items:center;gap:10px}
+  .lang-toggle{display:inline-flex;align-items:center;background:rgba(14,90,43,.08);
+    border-radius:30px;padding:4px;gap:2px;border:none;cursor:pointer}
+  .lang-toggle span{font-size:13px;font-weight:700;padding:5px 12px;border-radius:24px;
+    color:var(--ink-soft);transition:all .25s}
+  .lang-toggle span.on{background:var(--green);color:#fff;box-shadow:0 4px 10px -4px var(--green)}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;
+    font-family:inherit;font-weight:700;text-decoration:none;border-radius:40px;
+    transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;position:relative;overflow:hidden}
+  .btn-primary{background:linear-gradient(135deg,var(--saffron),var(--gold-deep));color:#fff;
+    padding:12px 22px;font-size:14.5px;box-shadow:0 10px 26px -10px rgba(232,89,12,.7)}
+  .btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 16px 32px -10px rgba(232,89,12,.8)}
+  .btn-lg{padding:16px 30px;font-size:16px}
+  .btn-ghost{background:rgba(255,255,255,.9);color:var(--green);padding:15px 28px;font-size:16px;
+    border:1.5px solid var(--line)}
+  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--leaf)}
+  .btn:focus-visible{outline:3px solid var(--saffron);outline-offset:3px}
+  .ripple{position:absolute;border-radius:50%;transform:scale(0);background:rgba(255,255,255,.5);
+    animation:rip .6s ease-out;pointer-events:none}
+  @keyframes rip{to{transform:scale(3.5);opacity:0}}
+  @media(max-width:860px){.nav-links{display:none}.brand-txt small{display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;padding:60px 0 70px;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:-2;
+    background:
+      radial-gradient(60% 55% at 78% 18%,rgba(224,164,53,.32),transparent 60%),
+      radial-gradient(55% 50% at 12% 80%,rgba(200,16,46,.20),transparent 60%),
+      radial-gradient(70% 60% at 50% 0%,rgba(110,10,24,.12),transparent 65%);
+    animation:meshShift 14s ease-in-out infinite alternate}
+  @keyframes meshShift{from{transform:scale(1) translate(0,0)}to{transform:scale(1.12) translate(-2%,1%)}}
+  .float{position:absolute;font-size:clamp(28px,5vw,52px);opacity:.5;z-index:-1;
+    filter:drop-shadow(0 8px 18px rgba(7,46,22,.25));animation:bob 7s ease-in-out infinite}
+  .float.f1{top:14%;left:6%;animation-delay:0s}
+  .float.f2{top:24%;right:8%;animation-delay:1.4s;font-size:clamp(24px,4vw,42px)}
+  .float.f3{bottom:22%;left:11%;animation-delay:2.6s;font-size:clamp(22px,3.6vw,38px)}
+  .float.f4{bottom:30%;right:13%;animation-delay:.8s}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-18px) rotate(4deg)}}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:36px;text-align:center}}
+  .pill{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.8);
+    border:1px solid var(--line);padding:8px 16px 8px 10px;border-radius:30px;font-size:13px;
+    font-weight:600;color:var(--green);box-shadow:0 6px 16px -10px rgba(7,46,22,.4)}
+  .pill .dot{width:9px;height:9px;border-radius:50%;background:var(--lime);position:relative}
+  .pill .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;
+    border:2px solid var(--lime);animation:pulse 2s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.6);opacity:0}}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(40px,6.6vw,72px);
+    line-height:1.02;letter-spacing:-1.5px;margin:22px 0 0;color:var(--green-deep)}
+  h1 em{font-style:italic;color:var(--saffron);position:relative;white-space:nowrap}
+  h1 em::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:10px;z-index:-1;
+    background:rgba(242,169,59,.4);border-radius:6px}
+  .hero-sub{margin:22px auto 0;font-size:18px;color:var(--ink-soft);max-width:460px}
+  @media(min-width:901px){.hero-sub{margin-left:0}}
+  .hero-cta{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap}
+  @media(max-width:900px){.hero-cta{justify-content:center}}
+  .hero-mini-stats{margin-top:34px;display:flex;gap:28px;flex-wrap:wrap}
+  @media(max-width:900px){.hero-mini-stats{justify-content:center}}
+  .hms{display:flex;flex-direction:column}
+  .hms b{font-family:'Fraunces',serif;font-size:26px;color:var(--green);font-weight:600}
+  .hms span{font-size:12.5px;color:var(--ink-soft);font-weight:500}
+
+  /* hero plate visual */
+  .hero-visual{position:relative;display:flex;align-items:center;justify-content:center}
+  .plate{width:min(420px,86vw);aspect-ratio:1;border-radius:50%;position:relative;
+    background:conic-gradient(from 210deg,#8E0E1F,#C8102E,#6E0A18,#8E0E1F);
+    box-shadow:var(--shadow),inset 0 0 0 14px rgba(255,255,255,.06);
+    display:flex;align-items:center;justify-content:center;animation:plateIn 1s cubic-bezier(.2,.9,.3,1.2) both}
+  @keyframes plateIn{from{opacity:0;transform:scale(.8) rotate(-12deg)}to{opacity:1;transform:none}}
+  .plate::before{content:"";position:absolute;inset:26px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#C8102E,#5A0814);
+    box-shadow:inset 0 8px 30px rgba(0,0,0,.4)}
+  .plate-emoji{position:relative;font-size:clamp(80px,16vw,140px);
+    filter:drop-shadow(0 14px 24px rgba(0,0,0,.4));animation:bob 6s ease-in-out infinite}
+  .chip-badge{position:absolute;background:#fff;border-radius:18px;padding:12px 16px;
+    box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;animation:bob 5s ease-in-out infinite}
+  .chip-badge .ic{font-size:22px}
+  .chip-badge b{font-size:14px;color:var(--green-deep);display:block;line-height:1.2}
+  .chip-badge small{font-size:11.5px;color:var(--ink-soft)}
+  .cb1{top:6%;left:-4%;animation-delay:.3s}
+  .cb2{bottom:8%;right:-3%;animation-delay:1.2s}
+  @media(max-width:900px){.cb1{left:2%}.cb2{right:2%}}
+  .scroll-cue{display:flex;justify-content:center;margin-top:46px}
+  .scroll-cue span{width:26px;height:42px;border:2px solid var(--ink-soft);border-radius:14px;
+    position:relative;opacity:.5}
+  .scroll-cue span::after{content:"";position:absolute;top:7px;left:50%;width:4px;height:8px;
+    margin-left:-2px;background:var(--ink-soft);border-radius:3px;animation:scrolly 1.6s ease infinite}
+  @keyframes scrolly{0%{transform:translateY(0);opacity:1}100%{transform:translateY(14px);opacity:0}}
+
+  /* ---------- Stats band ---------- */
+  .band{background:linear-gradient(135deg,var(--green-deep),var(--green));color:#fff;
+    padding:46px 0;position:relative;overflow:hidden}
+  .band::before{content:"";position:absolute;inset:0;opacity:.5;
+    background:radial-gradient(40% 80% at 85% 50%,rgba(224,164,53,.30),transparent),
+              radial-gradient(40% 80% at 10% 50%,rgba(240,160,172,.20),transparent)}
+  .stats{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+  @media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr);gap:30px 16px}}
+  .stat b{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,48px);font-weight:600;display:block;
+    background:linear-gradient(180deg,#fff,#f6e1bf);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent}
+  .stat span{font-size:13.5px;opacity:.82;letter-spacing:.3px}
+
+  /* ---------- Sections ---------- */
+  section{padding:78px 0}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:700;
+    letter-spacing:2.5px;text-transform:uppercase;color:var(--saffron)}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--saffron);border-radius:2px}
+  .sec-head{text-align:center;margin-bottom:50px}
+  .sec-head .eyebrow{justify-content:center}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,4.5vw,46px);
+    color:var(--green-deep);margin-top:12px;letter-spacing:-.8px}
+  .sec-head p{color:var(--ink-soft);margin-top:10px;font-size:16px;max-width:540px;margin-inline:auto}
+
+  /* ---------- Menu ---------- */
+  .menu-tools{display:flex;flex-direction:column;align-items:center;gap:18px;margin-bottom:38px}
+  .search{position:relative;width:min(380px,90vw)}
+  .search input{width:100%;padding:14px 18px 14px 46px;border-radius:40px;border:1.5px solid var(--line);
+    background:#fff;font-family:inherit;font-size:15px;color:var(--ink);transition:all .2s;outline:none}
+  .search input:focus{border-color:var(--leaf);box-shadow:0 0 0 4px rgba(200,16,46,.12)}
+  .search::before{content:"🔍";position:absolute;left:17px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.6}
+  .pills{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+  .pillbtn{padding:10px 20px;border-radius:40px;border:1.5px solid var(--line);background:#fff;
+    font-family:inherit;font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;
+    transition:all .22s}
+  .pillbtn:hover{border-color:var(--lime);color:var(--green)}
+  .pillbtn.active{background:var(--green);color:#fff;border-color:var(--green);
+    box-shadow:0 8px 20px -8px var(--green)}
+  .pillbtn:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+  .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media(max-width:760px){.menu-grid{grid-template-columns:1fr}}
+  .dish{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;background:#fff;
+    border:1px solid var(--line);border-radius:var(--r-md);padding:22px 24px;
+    transition:transform .3s cubic-bezier(.2,.9,.3,1.1),box-shadow .3s,border-color .3s;
+    opacity:0;transform:translateY(18px);will-change:transform}
+  .dish.in{opacity:1;transform:none}
+  .dish:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--lime)}
+  .dish-l{display:flex;gap:13px;align-items:flex-start}
+  .veg-dot{width:18px;height:18px;border:2px solid;border-radius:4px;flex-shrink:0;margin-top:3px;
+    display:flex;align-items:center;justify-content:center}
+  .veg-dot::after{content:"";width:8px;height:8px;border-radius:50%}
+  .veg .veg-dot{border-color:#2e7d32}.veg .veg-dot::after{background:#2e7d32}
+  .nonveg .veg-dot{border-color:#c62828}.nonveg .veg-dot::after{background:#c62828}
+  .dish-name{font-weight:700;font-size:16.5px;color:var(--ink)}
+  .dish-name .ta-name{display:block;font-size:13.5px;color:var(--leaf);font-weight:600;margin-top:1px}
+  .dish-desc{font-size:13px;color:var(--ink-soft);margin-top:6px;max-width:280px}
+  .dish-tags{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+    padding:3px 9px;border-radius:20px;background:var(--cream);color:var(--ink-soft)}
+  .tag.hot{background:rgba(232,89,12,.12);color:var(--saffron)}
+  .tag.pop{background:rgba(242,169,59,.16);color:var(--gold-deep)}
+  .dish-price{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--green);
+    white-space:nowrap}
+  .dish-price small{display:block;font-size:11px;color:var(--ink-soft);font-weight:400;
+    font-family:'Plus Jakarta Sans',sans-serif;text-align:right}
+  .empty{text-align:center;color:var(--ink-soft);padding:40px;grid-column:1/-1;display:none}
+
+  /* ---------- Spotlight ---------- */
+  .spotlight{background:linear-gradient(135deg,#5A0814,var(--green-deep));border-radius:var(--r-lg);
+    overflow:hidden;display:grid;grid-template-columns:1fr 1fr;align-items:center;color:#fff;
+    position:relative}
+  @media(max-width:820px){.spotlight{grid-template-columns:1fr}}
+  .spot-art{aspect-ratio:1;min-height:340px;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 45%,rgba(242,169,59,.35),transparent 60%);position:relative}
+  .spot-art .big-emoji{font-size:clamp(110px,20vw,190px);filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))}
+  .spot-ring{position:absolute;inset:14%;border:1.5px dashed rgba(255,255,255,.2);border-radius:50%;
+    animation:spin 28s linear infinite}
+  .spot-body{padding:50px}
+  @media(max-width:820px){.spot-body{padding:36px}}
+  .spot-body .eyebrow{color:var(--gold)}
+  .spot-body .eyebrow::before{background:var(--gold)}
+  .spot-body h3{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,40px);font-weight:600;margin:14px 0;
+    line-height:1.1}
+  .spot-body p{color:rgba(255,255,255,.78);font-size:15.5px;margin-bottom:22px}
+  .spot-price{display:flex;align-items:baseline;gap:10px;margin-bottom:26px}
+  .spot-price b{font-family:'Fraunces',serif;font-size:40px;color:var(--gold)}
+  .spot-price span{color:rgba(255,255,255,.7);font-size:15px}
+
+  /* ---------- Gallery ---------- */
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:760px){.gallery{grid-template-columns:repeat(2,1fr)}}
+  .gal{aspect-ratio:1;border-radius:var(--r-md);position:relative;overflow:hidden;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;border:1px solid var(--line)}
+  .gal .gemoji{font-size:48px;transition:transform .4s cubic-bezier(.2,.9,.3,1.2);z-index:1}
+  .gal:hover .gemoji{transform:scale(1.25) rotate(-6deg)}
+  .gal span.label{position:absolute;bottom:11px;left:13px;color:#fff;font-size:12.5px;font-weight:700;
+    z-index:2;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .gal::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(7,46,22,.6),transparent 55%)}
+  .gq1{background:linear-gradient(140deg,#f7d9a8,#e0a435)}
+  .gq2{background:linear-gradient(140deg,#f3b0a0,#c8102e)}
+  .gq3{background:linear-gradient(140deg,#f8c8a0,#d63b1f)}
+  .gq4{background:linear-gradient(140deg,#f6e0b0,#b27d1a)}
+  .gq5{background:linear-gradient(140deg,#f0b0b0,#8e0e1f)}
+  .gq6{background:linear-gradient(140deg,#fae3c0,#e0a435)}
+  .gq7{background:linear-gradient(140deg,#f4c0a8,#c8102e)}
+  .gq8{background:linear-gradient(140deg,#f7d2a0,#b8841f)}
+  .gal-note{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:18px;opacity:.8}
+
+  /* lightbox */
+  .lightbox{position:fixed;inset:0;z-index:250;background:rgba(7,46,22,.9);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;
+    transition:opacity .3s,visibility .3s;padding:24px}
+  .lightbox.open{opacity:1;visibility:visible}
+  .lb-card{width:min(480px,90vw);aspect-ratio:1;border-radius:var(--r-lg);display:flex;
+    align-items:center;justify-content:center;flex-direction:column;gap:14px;transform:scale(.85);
+    transition:transform .4s cubic-bezier(.2,.9,.3,1.3)}
+  .lightbox.open .lb-card{transform:scale(1)}
+  .lb-card .lbe{font-size:96px}
+  .lb-card .lbl{color:#fff;font-family:'Fraunces',serif;font-size:24px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+  .lb-close{position:absolute;top:24px;right:24px;width:46px;height:46px;border-radius:50%;border:none;
+    background:rgba(255,255,255,.15);color:#fff;font-size:22px;cursor:pointer;transition:background .2s}
+  .lb-close:hover{background:rgba(255,255,255,.3)}
+
+  /* ---------- Why / story ---------- */
+  .why{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:820px){.why{grid-template-columns:1fr}}
+  .why-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:34px 30px;
+    transition:transform .3s,box-shadow .3s}
+  .why-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+  .why-ic{width:60px;height:60px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+    font-size:28px;margin-bottom:18px;background:linear-gradient(140deg,var(--cream),#f6e6c8)}
+  .why-card h4{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin-bottom:8px;color:var(--green-deep)}
+  .why-card p{font-size:14.5px;color:var(--ink-soft)}
+
+  /* ---------- Testimonials ---------- */
+  .testi{position:relative;max-width:760px;margin:0 auto;text-align:center}
+  .testi-track{position:relative;min-height:200px}
+  .testi-slide{position:absolute;inset:0;opacity:0;transform:translateY(14px);
+    transition:opacity .5s,transform .5s;pointer-events:none}
+  .testi-slide.active{opacity:1;transform:none;pointer-events:auto;position:relative}
+  .testi-stars{color:var(--gold);font-size:20px;letter-spacing:3px}
+  .testi-quote{font-family:'Fraunces',serif;font-size:clamp(20px,3vw,28px);font-style:italic;
+    color:var(--green-deep);line-height:1.4;margin:20px 0 22px}
+  .testi-who{font-weight:700;color:var(--ink);font-size:15px}
+  .testi-who small{display:block;font-weight:500;color:var(--ink-soft);font-size:13px;margin-top:2px}
+  .testi-dots{display:flex;gap:9px;justify-content:center;margin-top:30px}
+  .testi-dots button{width:9px;height:9px;border-radius:50%;border:none;background:var(--line);cursor:pointer;
+    transition:all .25s;padding:0}
+  .testi-dots button.on{background:var(--green);width:26px;border-radius:10px}
+
+  /* ---------- Visit ---------- */
+  .visit-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  @media(max-width:860px){.visit-grid{grid-template-columns:1fr}}
+  .visit-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:38px;
+    box-shadow:0 18px 44px -28px rgba(7,46,22,.4)}
+  .visit-card h3{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--green-deep);margin-bottom:22px}
+  .vrow{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+  .vrow .vic{width:42px;height:42px;border-radius:12px;background:var(--cream);display:flex;
+    align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+  .vrow b{font-size:15px;color:var(--ink);display:block}
+  .vrow span{font-size:14px;color:var(--ink-soft)}
+  .vrow a{color:var(--leaf);font-weight:600;text-decoration:none}
+  .hours{list-style:none;margin-top:6px}
+  .hours li{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .hours li:last-child{border:none}
+  .hours li span:first-child{color:var(--ink-soft)}
+  .hours li span:last-child{font-weight:700;color:var(--green)}
+  .open-now{display:inline-flex;align-items:center;gap:7px;background:rgba(46,125,50,.12);color:#2e7d32;
+    font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:18px}
+  .open-now .dot{width:8px;height:8px;border-radius:50%;background:#2e7d32;animation:blink 1.6s infinite}
+  @keyframes blink{50%{opacity:.3}}
+  .map-embed{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);min-height:330px;
+    box-shadow:0 18px 44px -28px rgba(7,46,22,.4)}
+  .map-embed iframe{width:100%;height:100%;min-height:330px;border:0;display:block}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--green-deep);color:rgba(255,255,255,.7);padding:54px 0 120px;text-align:center}
+  @media(min-width:701px){footer{padding-bottom:54px}}
+  .foot-brand{font-family:'Fraunces',serif;font-size:24px;color:#fff;margin-bottom:10px}
+  .foot-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:18px 0;font-size:14px}
+  .foot-links a{color:rgba(255,255,255,.7);text-decoration:none;transition:color .2s}
+  .foot-links a:hover{color:var(--gold)}
+  .demo-note{margin-top:20px;font-size:12px;opacity:.55;max-width:480px;margin-inline:auto}
+
+  /* ---------- Mobile action bar ---------- */
+  .mbar{position:fixed;bottom:0;left:0;right:0;z-index:90;display:none;gap:9px;padding:11px 14px;
+    padding-bottom:calc(11px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+    box-shadow:0 -8px 28px -16px rgba(7,46,22,.5)}
+  .mbar a{flex:1;justify-content:center;padding:13px;font-size:14.5px}
+  .mbar .m-call{background:#fff;color:var(--green);border:1.5px solid var(--line)}
+  .mbar .m-wa{background:#25D366;color:#fff}
+  .mbar .m-dir{background:var(--green);color:#fff}
+  @media(max-width:700px){.mbar{display:flex}}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+    .reveal,.dish{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="loader" id="loader">
+  <div class="loader-plate"></div>
+  <div class="loader-name">Palaniappa Mess</div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark">🍛</span>
+      <span class="brand-txt"><b>Palaniappa Mess</b><small>Pudukkottai</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="#menu" data-en="Menu" data-ta="மெனு">Menu</a>
+      <a href="#story" data-en="Why Us" data-ta="ஏன் நாங்கள்">Why Us</a>
+      <a href="#reviews" data-en="Reviews" data-ta="மதிப்புரைகள்">Reviews</a>
+      <a href="#visit" data-en="Visit" data-ta="வாருங்கள்">Visit</a>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+        <span data-lang="en" class="on">EN</span>
+        <span data-lang="ta">த</span>
+      </button>
+      <a href="#visit" class="btn btn-primary" data-en="Order Now" data-ta="ஆர்டர்">Order Now</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-bg"></div>
+  <span class="float f1">🍛</span>
+  <span class="float f2">🌶️</span>
+  <span class="float f3">🍃</span>
+  <span class="float f4">🥘</span>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill"><span class="dot"></span><span data-en="Freshly cooked all day" data-ta="நாள் முழுவதும் சூடாக">Freshly cooked all day</span></span>
+      <h1 data-en='Taste that feels like <em>home</em>.' data-ta='வீட்டுச் சுவை, <em>தினமும்</em>.'>Taste that feels like <em>home</em>.</h1>
+      <p class="hero-sub" data-en="Authentic South Indian meals, biryani, tiffin & non-veg specials — cooked fresh every single day in the heart of Pudukkottai." data-ta="அசல் தென்னிந்திய மீல்ஸ், பிரியாணி, டிபன் மற்றும் அசைவ ஸ்பெஷல்ஸ் — புதுக்கோட்டையில் தினமும் சூடாக சமைக்கப்படுகிறது.">Authentic South Indian meals, biryani, tiffin & non-veg specials — cooked fresh every single day in the heart of Pudukkottai.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-primary btn-lg" data-en="See Menu &amp; Prices" data-ta="மெனு &amp; விலை">See Menu &amp; Prices</a>
+        <a href="#visit" class="btn btn-ghost" data-en="📍 Get Directions" data-ta="📍 வழி காட்டு">📍 Get Directions</a>
+      </div>
+      <div class="hero-mini-stats">
+        <div class="hms"><b data-count="30">0</b><span data-en="Years serving" data-ta="ஆண்டுகள்">Years serving</span></div>
+        <div class="hms"><b data-count="40" data-suffix="+">0</b><span data-en="Dishes daily" data-ta="உணவு வகைகள்">Dishes daily</span></div>
+        <div class="hms"><b data-count="4" data-suffix=".6★">0</b><span data-en="Google rating" data-ta="கூகுள் மதிப்பீடு">Google rating</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="plate">
+        <span class="plate-emoji">🍛</span>
+      </div>
+      <div class="chip-badge cb1"><span class="ic">⭐</span><div><b>4.6 / 5</b><small data-en="on Google" data-ta="கூகுளில்">on Google</small></div></div>
+      <div class="chip-badge cb2"><span class="ic">🔥</span><div><b data-en="Hot &amp; Fresh" data-ta="சூடு &amp; புதிது">Hot &amp; Fresh</b><small data-en="made to order" data-ta="ஆர்டருக்கு ஏற்ப">made to order</small></div></div>
+    </div>
+  </div>
+  <div class="scroll-cue"><span></span></div>
+</header>
+
+<!-- STATS BAND -->
+<div class="band">
+  <div class="wrap stats">
+    <div class="stat"><b data-count="30" data-suffix="+">0</b><span data-en="Years of taste" data-ta="ஆண்டு சுவை">Years of taste</span></div>
+    <div class="stat"><b data-count="50" data-suffix="k+">0</b><span data-en="Plates served" data-ta="தட்டுகள் பரிமாறப்பட்டது">Plates served</span></div>
+    <div class="stat"><b data-count="40" data-suffix="+">0</b><span data-en="Dishes on menu" data-ta="மெனு வகைகள்">Dishes on menu</span></div>
+    <div class="stat"><b data-count="100" data-suffix="%">0</b><span data-en="Fresh, never reheated" data-ta="புதிது, மறுசூடு இல்லை">Fresh, never reheated</span></div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="Our Menu" data-ta="எங்கள் மெனு">Our Menu</span>
+      <h2 data-en="What's cooking today" data-ta="இன்று என்ன சமையல்">What's cooking today</h2>
+      <p data-en="Tap a category or search. All prices are sample prices for this demo." data-ta="ஒரு வகையைத் தேர்ந்தெடுக்கவும் அல்லது தேடவும். விலைகள் மாதிரி விலைகள்.">Tap a category or search. All prices are sample prices for this demo.</p>
+    </div>
+    <div class="menu-tools reveal">
+      <div class="search"><input type="text" id="search" placeholder="Search dishes…" aria-label="Search dishes"></div>
+      <div class="pills" id="pills">
+        <button class="pillbtn active" data-cat="all" data-en="All" data-ta="அனைத்தும்">All</button>
+        <button class="pillbtn" data-cat="meals" data-en="Meals" data-ta="மீல்ஸ்">Meals</button>
+        <button class="pillbtn" data-cat="biryani" data-en="Biryani" data-ta="பிரியாணி">Biryani</button>
+        <button class="pillbtn" data-cat="tiffin" data-en="Tiffin" data-ta="டிபன்">Tiffin</button>
+        <button class="pillbtn" data-cat="specials" data-en="Specials" data-ta="ஸ்பெஷல்ஸ்">Specials</button>
+      </div>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+    <div class="empty" id="empty" data-en="No dishes match your search." data-ta="உங்கள் தேடலுக்கு உணவு இல்லை.">No dishes match your search.</div>
+  </div>
+</section>
+
+<!-- SPOTLIGHT -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="spotlight reveal">
+      <div class="spot-art">
+        <div class="spot-ring"></div>
+        <span class="big-emoji">🍗</span>
+      </div>
+      <div class="spot-body">
+        <span class="eyebrow" data-en="Signature Dish" data-ta="சிறப்பு உணவு">Signature Dish</span>
+        <h3 data-en="Pudukkottai Chicken Biryani" data-ta="புதுக்கோட்டை சிக்கன் பிரியாணி">Pudukkottai Chicken Biryani</h3>
+        <p data-en="Slow-cooked in the dum style with hand-ground masala, fragrant seeraga samba rice and tender chicken. The dish people drive across town for." data-ta="கைகளால் அரைத்த மசாலா, சீரக சம்பா அரிசி மற்றும் மென்மையான சிக்கனுடன் தம் முறையில் சமைக்கப்படுகிறது. ஊரே தேடி வரும் சுவை.">Slow-cooked in the dum style with hand-ground masala, fragrant seeraga samba rice and tender chicken. The dish people drive across town for.</p>
+        <div class="spot-price"><b>₹150</b><span data-en="per plate · with raita" data-ta="ஒரு தட்டு · ரைதாவுடன்">per plate · with raita</span></div>
+        <a href="#visit" class="btn btn-primary btn-lg" data-en="Order on WhatsApp" data-ta="வாட்ஸ்அப்பில் ஆர்டர்">Order on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="A peek inside" data-ta="உள்ளே ஒரு பார்வை">A peek inside</span>
+      <h2 data-en="Straight from our kitchen" data-ta="எங்கள் சமையலறையிலிருந்து">Straight from our kitchen</h2>
+    </div>
+    <div class="gallery reveal" id="gallery">
+      <div class="gal gq1" data-emoji="🍛" data-label="Veg Meals"><span class="gemoji">🍛</span><span class="label" data-en="Veg Meals" data-ta="சைவ மீல்ஸ்">Veg Meals</span></div>
+      <div class="gal gq2" data-emoji="🍗" data-label="Chicken Biryani"><span class="gemoji">🍗</span><span class="label" data-en="Chicken Biryani" data-ta="சிக்கன் பிரியாணி">Chicken Biryani</span></div>
+      <div class="gal gq3" data-emoji="🥘" data-label="Mutton Chukka"><span class="gemoji">🥘</span><span class="label" data-en="Mutton Chukka" data-ta="மட்டன் சுக்கா">Mutton Chukka</span></div>
+      <div class="gal gq4" data-emoji="🫓" data-label="Parotta"><span class="gemoji">🫓</span><span class="label" data-en="Parotta &amp; Salna" data-ta="பரோட்டா">Parotta &amp; Salna</span></div>
+      <div class="gal gq5" data-emoji="🍚" data-label="Idly"><span class="gemoji">🍚</span><span class="label" data-en="Idly &amp; Sambar" data-ta="இட்லி">Idly &amp; Sambar</span></div>
+      <div class="gal gq6" data-emoji="🍤" data-label="Chicken 65"><span class="gemoji">🍤</span><span class="label" data-en="Chicken 65" data-ta="சிக்கன் 65">Chicken 65</span></div>
+      <div class="gal gq7" data-emoji="🧆" data-label="Poori Masala"><span class="gemoji">🧆</span><span class="label" data-en="Poori Masala" data-ta="பூரி மசாலா">Poori Masala</span></div>
+      <div class="gal gq8" data-emoji="🍮" data-label="Payasam"><span class="gemoji">🍮</span><span class="label" data-en="Payasam" data-ta="பாயசம்">Payasam</span></div>
+    </div>
+    <p class="gal-note" data-en="✦ Demo visuals — real food photos go here once the shop shares them." data-ta="✦ மாதிரி படங்கள் — உண்மையான உணவு புகைப்படங்கள் இங்கே வரும்.">✦ Demo visuals — real food photos go here once the shop shares them.</p>
+  </div>
+</section>
+
+<!-- WHY / STORY -->
+<section id="story">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="Why Palaniappa" data-ta="ஏன் பழனியப்பா">Why Palaniappa</span>
+      <h2 data-en="Three reasons people keep coming back" data-ta="மக்கள் திரும்பத் திரும்ப வர மூன்று காரணங்கள்">Three reasons people keep coming back</h2>
+    </div>
+    <div class="why">
+      <div class="why-card reveal">
+        <div class="why-ic">🍛</div>
+        <h4 data-en="Home-style Cooking" data-ta="வீட்டு சமையல்">Home-style Cooking</h4>
+        <p data-en="Every dish made fresh to order — no shortcuts, no reheating, just food the way amma makes it." data-ta="ஒவ்வொரு உணவும் ஆர்டருக்கு ஏற்ப புதிதாக — குறுக்கு வழி இல்லை, அம்மா செய்வது போல்.">Every dish made fresh to order — no shortcuts, no reheating, just food the way amma makes it.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-ic">🌶️</div>
+        <h4 data-en="Authentic Taste" data-ta="அசல் சுவை">Authentic Taste</h4>
+        <p data-en="Traditional Pudukkottai recipes and hand-ground masalas, passed down and perfected over decades." data-ta="பாரம்பரிய புதுக்கோட்டை செய்முறைகள், கைகளால் அரைத்த மசாலாக்கள், தலைமுறைகளாக.">Traditional Pudukkottai recipes and hand-ground masalas, passed down and perfected over decades.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-ic">💰</div>
+        <h4 data-en="Honest Prices" data-ta="நியாயமான விலை">Honest Prices</h4>
+        <p data-en="Unlimited meals from ₹80. Great food shouldn't cost a fortune — and here it never does." data-ta="அன்லிமிடெட் மீல்ஸ் ₹80 முதல். நல்ல உணவு விலை உயர்ந்ததாக இருக்கக்கூடாது.">Unlimited meals from ₹80. Great food shouldn't cost a fortune — and here it never does.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="reviews" style="background:linear-gradient(180deg,transparent,rgba(224,164,53,.10))">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="Happy Customers" data-ta="மகிழ்ச்சியான வாடிக்கையாளர்கள்">Happy Customers</span>
+      <h2 data-en="Don't just take our word" data-ta="எங்கள் வார்த்தையை மட்டும் நம்பாதீர்கள்">Don't just take our word</h2>
+    </div>
+    <div class="testi reveal">
+      <div class="testi-track" id="testiTrack">
+        <div class="testi-slide active">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote" data-en="“Best mess food in Pudukkottai. The meals taste just like home cooking — I eat here every week.”" data-ta="“புதுக்கோட்டையின் சிறந்த மெஸ் உணவு. வீட்டு சமையல் போலவே சுவை — ஒவ்வொரு வாரமும் இங்கே சாப்பிடுகிறேன்.”">“Best mess food in Pudukkottai. The meals taste just like home cooking — I eat here every week.”</p>
+          <div class="testi-who">Karthik R.<small data-en="Regular customer" data-ta="வழக்கமான வாடிக்கையாளர்">Regular customer</small></div>
+        </div>
+        <div class="testi-slide">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote" data-en="“The biryani is incredible and the price is so fair. Clean place, quick service.”" data-ta="“பிரியாணி அற்புதம், விலையும் மிகவும் நியாயம். சுத்தமான இடம், விரைவான சேவை.”">“The biryani is incredible and the price is so fair. Clean place, quick service.”</p>
+          <div class="testi-who">Anitha P.<small data-en="Visited last week" data-ta="கடந்த வாரம் வந்தவர்">Visited last week</small></div>
+        </div>
+        <div class="testi-slide">
+          <div class="testi-stars">★★★★☆</div>
+          <p class="testi-quote" data-en="“Unlimited sambar, hot rice, friendly people. This is comfort food done right.”" data-ta="“அன்லிமிடெட் சாம்பார், சூடான சாதம், அன்பான மக்கள். உண்மையான கம்ஃபர்ட் உணவு.”">“Unlimited sambar, hot rice, friendly people. This is comfort food done right.”</p>
+          <div class="testi-who">Surya M.<small data-en="Local foodie" data-ta="உள்ளூர் உணவுப்பிரியர்">Local foodie</small></div>
+        </div>
+      </div>
+      <div class="testi-dots" id="testiDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section id="visit">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="Come Visit" data-ta="வாருங்கள்">Come Visit</span>
+      <h2 data-en="Find us in Pudukkottai" data-ta="புதுக்கோட்டையில் எங்களைக் காணுங்கள்">Find us in Pudukkottai</h2>
+    </div>
+    <div class="visit-grid">
+      <div class="visit-card reveal">
+        <div class="open-now"><span class="dot"></span><span data-en="Open now · till 10 PM" data-ta="இப்போது திறந்துள்ளது · இரவு 10 வரை">Open now · till 10 PM</span></div>
+        <h3 data-en="Reach us" data-ta="தொடர்பு கொள்ள">Reach us</h3>
+        <div class="vrow"><div class="vic">📍</div><div><b data-en="Address" data-ta="முகவரி">Address</b><span>Pudukkottai, Tamil Nadu</span></div></div>
+        <div class="vrow"><div class="vic">📞</div><div><b data-en="Phone" data-ta="தொலைபேசி">Phone</b><span style="opacity:.65;font-style:italic" data-en="Demo — real number added on confirmation" data-ta="டெமோ — உறுதி செய்தவுடன் உண்மையான எண்">Demo — real number added on confirmation</span></div></div>
+        <div class="vrow"><div class="vic">🕐</div><div style="flex:1"><b data-en="Opening Hours" data-ta="வேலை நேரம்">Opening Hours</b>
+          <ul class="hours">
+            <li><span data-en="Mon – Sat" data-ta="திங்கள் – சனி">Mon – Sat</span><span>6:30 AM – 10:00 PM</span></li>
+            <li><span data-en="Sunday" data-ta="ஞாயிறு">Sunday</span><span>7:00 AM – 10:00 PM</span></li>
+          </ul>
+        </div></div>
+        <div class="hero-cta" style="margin-top:24px">
+          <a href="https://www.google.com/maps/search/?api=1&query=Palaniappa+Mess+Pudukkottai" target="_blank" rel="noopener" class="btn btn-primary" data-en="Get Directions →" data-ta="வழி காட்டு →">Get Directions →</a>
+        </div>
+      </div>
+      <div class="map-embed reveal">
+        <iframe
+          src="https://maps.google.com/maps?q=Palaniappa%20Mess%20Pudukkottai&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Palaniappa Mess location map"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-brand">🍛 Palaniappa Mess</div>
+    <p data-en="Home-style South Indian food · Pudukkottai" data-ta="வீட்டு தென்னிந்திய உணவு · புதுக்கோட்டை">Home-style South Indian food · Pudukkottai</p>
+    <div class="foot-links">
+      <a href="#menu" data-en="Menu" data-ta="மெனு">Menu</a>
+      <a href="#story" data-en="Why Us" data-ta="ஏன் நாங்கள்">Why Us</a>
+      <a href="#reviews" data-en="Reviews" data-ta="மதிப்புரைகள்">Reviews</a>
+      <a href="#visit" data-en="Visit" data-ta="வாருங்கள்">Visit</a>
+    </div>
+    <p class="demo-note" data-en="✦ This is a demo website proposal. Menu, prices, photos & contact details are samples and will be replaced with the shop's real information." data-ta="✦ இது ஒரு டெமோ வலைத்தள முன்மொழிவு. மெனு, விலை, புகைப்படங்கள் மற்றும் தொடர்பு விவரங்கள் மாதிரிகள், கடையின் உண்மையான தகவலுடன் மாற்றப்படும்.">✦ This is a demo website proposal. Menu, prices, photos & contact details are samples and will be replaced with the shop's real information.</p>
+  </div>
+</footer>
+
+<!-- MOBILE ACTION BAR -->
+<div class="mbar">
+  <a href="tel:" class="btn m-call" data-en="📞 Call" data-ta="📞 அழை">📞 Call</a>
+  <a href="https://wa.me/" target="_blank" rel="noopener" class="btn m-wa" data-en="WhatsApp" data-ta="வாட்ஸ்அப்">WhatsApp</a>
+  <a href="https://www.google.com/maps/search/?api=1&query=Palaniappa+Mess+Pudukkottai" target="_blank" rel="noopener" class="btn m-dir" data-en="📍 Map" data-ta="📍 வரைபடம்">📍 Map</a>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <div class="lb-card" id="lbCard"><span class="lbe"></span><span class="lbl"></span></div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Loader ---- */
+  window.addEventListener('load', function(){
+    setTimeout(function(){ document.getElementById('loader').classList.add('done'); }, 500);
+  });
+
+  /* ---- Scroll progress + nav state ---- */
+  var progress = document.getElementById('progress'), nav = document.getElementById('nav');
+  function onScroll(){
+    var st = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (h>0 ? (st/h*100) : 0) + '%';
+    nav.classList.toggle('scrolled', st > 20);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* ---- Language toggle ---- */
+  var lang = 'en';
+  function applyLang(){
+    document.querySelectorAll('[data-en]').forEach(function(el){
+      var v = el.getAttribute('data-'+lang);
+      if(v!=null) el.innerHTML = v;
+    });
+    document.querySelectorAll('#langToggle span').forEach(function(s){
+      s.classList.toggle('on', s.getAttribute('data-lang')===lang);
+    });
+    document.body.classList.toggle('ta-mode', lang==='ta');
+    document.documentElement.lang = (lang==='ta'?'ta':'en');
+    renderMenu();
+  }
+  document.getElementById('langToggle').addEventListener('click', function(){
+    lang = (lang==='en'?'ta':'en'); applyLang();
+  });
+
+  /* ---- Menu data + render ---- */
+  var dishes = [
+    {cat:'meals', veg:1, en:'Veg Meals (Unlimited)', ta:'சைவ மீல்ஸ் (அன்லிமிடெட்)', den:'Rice, sambar, rasam, kootu, poriyal, curd & payasam.', dta:'சாதம், சாம்பார், ரசம், கூட்டு, பொரியல், தயிர் & பாயசம்.', p:'₹80', tags:['pop']},
+    {cat:'meals', veg:0, en:'Non-Veg Meals', ta:'அசைவ மீல்ஸ்', den:'Full meals with chicken or mutton curry.', dta:'சிக்கன் அல்லது மட்டன் கறியுடன் முழு மீல்ஸ்.', p:'₹130', tags:[]},
+    {cat:'biryani', veg:0, en:'Chicken Biryani', ta:'சிக்கன் பிரியாணி', den:'Pudukkottai-style dum biryani with raita.', dta:'புதுக்கோட்டை ஸ்டைல் தம் பிரியாணி, ரைதாவுடன்.', p:'₹150', tags:['pop','hot']},
+    {cat:'biryani', veg:0, en:'Mutton Biryani', ta:'மட்டன் பிரியாணி', den:'Slow-cooked with fresh ground masala.', dta:'புதிதாக அரைத்த மசாலாவுடன் மெதுவாக சமைத்தது.', p:'₹200', tags:['hot']},
+    {cat:'tiffin', veg:1, en:'Idly (2 pcs)', ta:'இட்லி (2)', den:'Soft steamed idlis with sambar & chutney.', dta:'மென்மையான இட்லி, சாம்பார் & சட்னியுடன்.', p:'₹30', tags:[]},
+    {cat:'tiffin', veg:1, en:'Dosa', ta:'தோசை', den:'Crispy golden dosa with chutney & sambar.', dta:'மொறுமொறு தோசை, சட்னி & சாம்பாருடன்.', p:'₹40', tags:['pop']},
+    {cat:'tiffin', veg:1, en:'Parotta & Salna', ta:'பரோட்டா & சால்னா', den:'Flaky layered parotta with spicy salna.', dta:'அடுக்கு பரோட்டா, காரமான சால்னாவுடன்.', p:'₹50', tags:['hot']},
+    {cat:'tiffin', veg:1, en:'Poori & Masala', ta:'பூரி & மசாலா', den:'Puffed pooris with potato masala.', dta:'உப்பிய பூரி, உருளைக்கிழங்கு மசாலாவுடன்.', p:'₹45', tags:[]},
+    {cat:'specials', veg:0, en:'Chicken 65', ta:'சிக்கன் 65', den:'Crispy, spicy deep-fried chicken.', dta:'மொறுமொறு, காரமான பொரித்த சிக்கன்.', p:'₹120', tags:['hot','pop']},
+    {cat:'specials', veg:0, en:'Mutton Chukka', ta:'மட்டன் சுக்கா', den:'Dry-roasted mutton with pepper & spices.', dta:'மிளகு & மசாலாவுடன் வறுத்த மட்டன்.', p:'₹180', tags:['hot']}
+  ];
+  var TAGLABEL = {hot:{en:'🌶 Spicy',ta:'🌶 காரம்'}, pop:{en:'★ Popular',ta:'★ பிரபலம்'}};
+  var grid = document.getElementById('menuGrid'), empty = document.getElementById('empty');
+  var curCat = 'all', curQ = '';
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function renderMenu(){
+    var q = curQ.toLowerCase();
+    var list = dishes.filter(function(d){
+      var okCat = curCat==='all' || d.cat===curCat;
+      var okQ = !q || (d.en+' '+d.ta+' '+d.den).toLowerCase().indexOf(q) > -1;
+      return okCat && okQ;
+    });
+    grid.innerHTML = '';
+    empty.style.display = list.length ? 'none' : 'block';
+    list.forEach(function(d,i){
+      var name = lang==='ta'? d.ta : d.en, alt = lang==='ta'? d.en : d.ta;
+      var desc = lang==='ta'? d.dta : d.den;
+      var tags = d.tags.map(function(t){return '<span class="tag '+t+'">'+TAGLABEL[t][lang]+'</span>';}).join('');
+      var el = document.createElement('div');
+      el.className = 'dish ' + (d.veg?'veg':'nonveg');
+      el.innerHTML = '<div class="dish-l"><span class="veg-dot" title="'+(d.veg?'Veg':'Non-veg')+'"></span>'+
+        '<div><div class="dish-name">'+esc(name)+'<span class="ta-name">'+esc(alt)+'</span></div>'+
+        '<div class="dish-desc">'+esc(desc)+'</div>'+(tags?'<div class="dish-tags">'+tags+'</div>':'')+'</div></div>'+
+        '<div class="dish-price">'+esc(d.p)+'<small>'+(lang==='ta'?'முதல்':'onwards')+'</small></div>';
+      grid.appendChild(el);
+      if(reduce){ el.classList.add('in'); }
+      else { setTimeout(function(){ el.classList.add('in'); }, i*45); }
+    });
+  }
+  document.getElementById('pills').addEventListener('click', function(e){
+    var b = e.target.closest('.pillbtn'); if(!b) return;
+    document.querySelectorAll('.pillbtn').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active'); curCat = b.getAttribute('data-cat'); renderMenu();
+  });
+  document.getElementById('search').addEventListener('input', function(e){ curQ = e.target.value; renderMenu(); });
+
+  /* ---- Count-up stats ---- */
+  function runCount(el){
+    var target = +el.getAttribute('data-count'), suf = el.getAttribute('data-suffix')||'';
+    if(reduce){ el.textContent = target+suf; return; }
+    var dur = 1400, t0 = performance.now();
+    function step(now){
+      var p = Math.min((now-t0)/dur,1), e = 1-Math.pow(1-p,3);
+      el.textContent = Math.round(e*target) + suf;
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ---- Reveal + counters via IntersectionObserver ---- */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);
+        e.target.querySelectorAll('[data-count]').forEach(runCount);
+      }
+    });
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  document.querySelectorAll('.band').forEach(function(el){ io.observe(el); });
+  // hero counters fire immediately
+  document.querySelectorAll('.hero [data-count]').forEach(runCount);
+
+  /* ---- Testimonials carousel ---- */
+  var slides = document.querySelectorAll('.testi-slide'), dotsWrap = document.getElementById('testiDots'), ti = 0, timer;
+  slides.forEach(function(_,i){
+    var b = document.createElement('button'); if(i===0) b.classList.add('on');
+    b.setAttribute('aria-label','Review '+(i+1));
+    b.addEventListener('click', function(){ go(i); reset(); });
+    dotsWrap.appendChild(b);
+  });
+  var dots = dotsWrap.querySelectorAll('button');
+  function go(i){
+    slides[ti].classList.remove('active'); dots[ti].classList.remove('on');
+    ti = i; slides[ti].classList.add('active'); dots[ti].classList.add('on');
+  }
+  function next(){ go((ti+1)%slides.length); }
+  function reset(){ if(timer) clearInterval(timer); if(!reduce) timer = setInterval(next, 5000); }
+  reset();
+
+  /* ---- Gallery lightbox ---- */
+  var lb = document.getElementById('lightbox'), lbCard = document.getElementById('lbCard');
+  document.getElementById('gallery').addEventListener('click', function(e){
+    var g = e.target.closest('.gal'); if(!g) return;
+    lbCard.className = 'lb-card ' + g.className.replace('gal','').trim();
+    lbCard.querySelector('.lbe').textContent = g.getAttribute('data-emoji');
+    lbCard.querySelector('.lbl').textContent = g.querySelector('.label').textContent;
+    lb.classList.add('open');
+  });
+  function closeLb(){ lb.classList.remove('open'); }
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', function(e){ if(e.target===lb) closeLb(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLb(); });
+
+  /* ---- Button ripple ---- */
+  document.querySelectorAll('.btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      if(reduce) return;
+      var r = document.createElement('span'); r.className='ripple';
+      var rect = btn.getBoundingClientRect(), size = Math.max(rect.width,rect.height);
+      r.style.width = r.style.height = size+'px';
+      r.style.left = (e.clientX-rect.left-size/2)+'px';
+      r.style.top = (e.clientY-rect.top-size/2)+'px';
+      btn.appendChild(r); setTimeout(function(){ r.remove(); }, 600);
+    });
+  });
+
+  /* ---- Initial render ---- */
+  renderMenu();
+})();
+</script>
+</body>
+</html>
