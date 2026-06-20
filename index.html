@@ -143,19 +143,19 @@
   .m-search input::placeholder{color:rgba(255,255,255,.5)}
   .m-search input:focus{border-color:var(--ochre);background:rgba(255,255,255,.12)}
   .m-search::before{content:"🔍";position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:.6;font-size:14px}
-  /* sliding portrait menu */
-  .mslider{max-width:500px;margin:0 auto;position:relative}
-  .mviewport{overflow:hidden;border-radius:22px;box-shadow:0 40px 80px -40px rgba(0,0,0,.55);
-    background:var(--paper);touch-action:pan-y;cursor:grab}
+  /* sliding menu — one card per category, viewport height fits the active card */
+  .mslider{max-width:600px;margin:0 auto;position:relative}
+  .mviewport{overflow:hidden;border-radius:20px;background:var(--paper);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.45);height:auto;
+    transition:height .4s cubic-bezier(.2,.8,.2,1);touch-action:pan-y;cursor:grab}
   .mviewport:active{cursor:grabbing}
   .mviewport:focus-visible{outline:3px solid var(--ochre);outline-offset:3px}
-  .mtrack{display:flex;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-  .mslide{flex:0 0 100%;min-width:100%;background:var(--paper);color:var(--ink);
-    padding:42px 42px 48px;min-height:540px}
-  @media(max-width:600px){.mslide{padding:32px 24px 38px;min-height:500px}}
+  .mtrack{display:flex;align-items:flex-start;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+  .mslide{flex:0 0 100%;min-width:100%;color:var(--ink);padding:36px 42px}
+  @media(max-width:600px){.mslide{padding:28px 22px}}
   .m-nav{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:26px}
-  .m-arrow{width:52px;height:52px;border-radius:50%;border:1.6px solid rgba(255,255,255,.28);
-    background:rgba(255,255,255,.08);color:#fff;font-size:24px;line-height:1;cursor:pointer;
+  .m-arrow{width:50px;height:50px;border-radius:50%;border:1.6px solid rgba(255,255,255,.28);
+    background:rgba(255,255,255,.08);color:#fff;font-size:23px;line-height:1;cursor:pointer;
     display:flex;align-items:center;justify-content:center;transition:.2s}
   .m-arrow:hover{background:var(--ochre);color:var(--forest-deep);border-color:var(--ochre)}
   .m-arrow:focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
@@ -228,9 +228,13 @@
     display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .vrow b{display:block;font-size:14.5px}
   .vrow span{font-size:13.5px;color:var(--ink-soft)}
-  .opennow{display:inline-flex;align-items:center;gap:7px;background:rgba(46,125,50,.12);color:#2e7d32;
+  .opennow{display:inline-flex;align-items:center;gap:7px;
     font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:16px}
-  .opennow .d{width:8px;height:8px;border-radius:50%;background:#2e7d32;animation:bk 1.6s infinite}
+  .opennow.is-open{background:rgba(46,125,50,.12);color:#2e7d32}
+  .opennow.is-closed{background:rgba(200,30,30,.10);color:#c62828}
+  .opennow .d{width:8px;height:8px;border-radius:50%;animation:bk 1.6s infinite}
+  .opennow.is-open .d{background:#2e7d32}
+  .opennow.is-closed .d{background:#c62828}
   @keyframes bk{50%{opacity:.3}}
   .hours{list-style:none}
   .hours li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
@@ -265,7 +269,7 @@
 <!-- HEADER -->
 <header class="hdr" id="hdr">
   <div class="hdr-in">
-    <a href="#top" class="logo"><span class="leaf">🌿</span><b>Aiswaryaa</b></a>
+    <a href="#top" class="logo"><span class="leaf">🌿</span><b>Aiswaryaa Hotel</b></a>
     <nav class="nav">
       <a href="#menu" data-en="Menu" data-ta="மெனு">Menu</a>
       <a href="#story" data-en="Why Us" data-ta="ஏன் நாங்கள்">Why Us</a>
@@ -408,7 +412,7 @@
     </div>
     <div class="visit-info reveal">
       <div class="vi">
-        <div class="opennow"><span class="d"></span><span data-en="Open now · till 10:30 PM" data-ta="இப்போது திறந்துள்ளது · இரவு 10:30 வரை">Open now · till 10:30 PM</span></div>
+        <div class="opennow" id="openStatus"><span class="d"></span><span id="openText">Checking…</span></div>
         <h3 data-en="Reach us" data-ta="தொடர்பு">Reach us</h3>
         <div class="vrow"><div class="vic">📍</div><div><b data-en="Address" data-ta="முகவரி">Address</b><span>Pudukkottai, Tamil Nadu</span></div></div>
         <div class="vrow"><div class="vic">📞</div><div><b data-en="Phone" data-ta="தொலைபேசி">Phone</b><a href="tel:+919787528666" style="color:var(--ochre-deep);font-weight:700">+91 97875 28666</a></div></div>
@@ -542,14 +546,15 @@
         return d.cat===c.id && (!query || (d.en+' '+d.ta+' '+d.den).toLowerCase().indexOf(query)>-1);
       });
       if(!items.length) return;
-      var rows = items.map(function(d){
+      var rows = '';
+      items.forEach(function(d){
         var name = lang==='ta'?d.ta:d.en, alt = lang==='ta'?d.en:d.ta, desc = lang==='ta'?d.dta:d.den;
         var badge = d.tag ? '<span class="m-badge '+d.tag+'">'+BADGE[d.tag][lang]+'</span>' : '';
-        return '<div class="m-row"><span class="vd"></span><div class="m-info">'+
+        rows += '<div class="m-row"><span class="vd"></span><div class="m-info">'+
           '<div class="m-name">'+esc(name)+'<span class="tn">'+esc(alt)+'</span>'+badge+'</div>'+
           '<div class="m-desc">'+esc(desc)+'</div></div>'+
           '<span class="lead"></span><span class="m-price">'+esc(d.p)+'</span></div>';
-      }).join('');
+      });
       var slide = document.createElement('div'); slide.className = 'mslide';
       slide.innerHTML = '<div class="m-cat-h"><span class="ic">'+c.ic+'</span><h3>'+esc(lang==='ta'?c.ta:c.en)+'</h3></div>'+rows;
       track.appendChild(slide);
@@ -563,14 +568,18 @@
     if(idx >= count) idx = 0;
     mupdate();
   }
+  function mheight(){ var s = track.children[idx]; if(s) viewport.style.height = s.offsetHeight + 'px'; }
   function mupdate(){
     track.style.transform = 'translateX(-'+(idx*100)+'%)';
     dotsEl.querySelectorAll('button').forEach(function(b,i){ b.classList.toggle('on', i===idx); });
+    mheight();
   }
   function mgo(i){ if(!count) return; idx = (i+count)%count; mupdate(); }
   mprev.addEventListener('click', function(){ mgo(idx-1); });
   mnext.addEventListener('click', function(){ mgo(idx+1); });
   document.getElementById('search').addEventListener('input', function(e){ q = e.target.value; idx = 0; renderMenu(); });
+  window.addEventListener('resize', mheight);
+  window.addEventListener('load', mheight);
   // swipe
   var sx=0, dx=0, drag=false;
   viewport.addEventListener('pointerdown', function(e){ drag=true; sx=e.clientX; dx=0; });
@@ -598,6 +607,27 @@
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
 
   renderMenu();
+
+  /* Open/Closed status — Mon-Sat 6:30-22:30, Sun 6:30-23:00 (IST) */
+  function updateOpenStatus(){
+    var now = new Date();
+    var ist = new Date(now.toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+    var day = ist.getDay(), h = ist.getHours(), m = ist.getMinutes(), t = h*60+m;
+    var open = 6*60+30, close = (day===0) ? 23*60 : 22*60+30;
+    var isOpen = t >= open && t < close;
+    var el = document.getElementById('openStatus'), txt = document.getElementById('openText');
+    if(isOpen){
+      el.className = 'opennow is-open';
+      var ch = Math.floor(close/60), cm = close%60;
+      var ap = ch>=12?'PM':'AM', dh = ch>12?ch-12:ch;
+      txt.textContent = 'Open now · till '+dh+':'+(cm<10?'0':'')+cm+' '+ap;
+    } else {
+      el.className = 'opennow is-closed';
+      txt.textContent = 'Closed · opens 6:30 AM';
+    }
+  }
+  updateOpenStatus();
+  setInterval(updateOpenStatus, 60000);
 })();
 </script>
 </body>
