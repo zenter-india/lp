@@ -1,0 +1,9 @@
+{
+  // Serve this repo as a static site (assets-only Worker) on Cloudflare.
+  // index.html at the root becomes the homepage.
+  "name": "lp",
+  "compatibility_date": "2026-06-20",
+  "assets": {
+    "directory": "."
+  }
+}
