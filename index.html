@@ -527,30 +527,30 @@
       slide.innerHTML = '<div class="m-cat-h"><span class="ic">'+c.ic+'</span><h3>'+esc(lang==='ta'?c.ta:c.en)+'</h3></div>'+rows;
       track.appendChild(slide);
       var b = document.createElement('button'); b.setAttribute('aria-label', lang==='ta'?c.ta:c.en);
-      (function(i){ b.addEventListener('click', function(){ go(i); }); })(count);
+      (function(i){ b.addEventListener('click', function(){ mgo(i); }); })(count);
       dotsEl.appendChild(b);
       count++;
     });
     empty.style.display = count ? 'none' : 'block';
     mnav.style.display = count > 1 ? 'flex' : 'none';
     if(idx >= count) idx = 0;
-    update();
+    mupdate();
   }
-  function update(){
+  function mupdate(){
     track.style.transform = 'translateX(-'+(idx*100)+'%)';
     dotsEl.querySelectorAll('button').forEach(function(b,i){ b.classList.toggle('on', i===idx); });
   }
-  function go(i){ if(!count) return; idx = (i+count)%count; update(); }
-  mprev.addEventListener('click', function(){ go(idx-1); });
-  mnext.addEventListener('click', function(){ go(idx+1); });
+  function mgo(i){ if(!count) return; idx = (i+count)%count; mupdate(); }
+  mprev.addEventListener('click', function(){ mgo(idx-1); });
+  mnext.addEventListener('click', function(){ mgo(idx+1); });
   document.getElementById('search').addEventListener('input', function(e){ q = e.target.value; idx = 0; renderMenu(); });
   // swipe
   var sx=0, dx=0, drag=false;
   viewport.addEventListener('pointerdown', function(e){ drag=true; sx=e.clientX; dx=0; });
   window.addEventListener('pointermove', function(e){ if(drag) dx=e.clientX-sx; });
-  window.addEventListener('pointerup', function(){ if(!drag) return; drag=false; if(Math.abs(dx)>50) go(idx+(dx<0?1:-1)); });
+  window.addEventListener('pointerup', function(){ if(!drag) return; drag=false; if(Math.abs(dx)>50) mgo(idx+(dx<0?1:-1)); });
   // keyboard
-  viewport.addEventListener('keydown', function(e){ if(e.key==='ArrowLeft') go(idx-1); else if(e.key==='ArrowRight') go(idx+1); });
+  viewport.addEventListener('keydown', function(e){ if(e.key==='ArrowLeft') mgo(idx-1); else if(e.key==='ArrowRight') mgo(idx+1); });
 
   /* Reviews carousel */
   var slides = document.querySelectorAll('.rev-slide'), dotsW = document.getElementById('revDots'), ri = 0, timer;
