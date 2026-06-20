@@ -138,9 +138,26 @@
   .m-search input::placeholder{color:rgba(255,255,255,.5)}
   .m-search input:focus{border-color:var(--ochre);background:rgba(255,255,255,.12)}
   .m-search::before{content:"🔍";position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:.6;font-size:14px}
-  .menu-card{background:var(--paper);color:var(--ink);border-radius:20px;padding:46px 50px;max-width:860px;margin:0 auto;
-    box-shadow:0 40px 80px -40px rgba(0,0,0,.5)}
-  @media(max-width:600px){.menu-card{padding:32px 24px}}
+  /* sliding portrait menu */
+  .mslider{max-width:500px;margin:0 auto;position:relative}
+  .mviewport{overflow:hidden;border-radius:22px;box-shadow:0 40px 80px -40px rgba(0,0,0,.55);
+    background:var(--paper);touch-action:pan-y;cursor:grab}
+  .mviewport:active{cursor:grabbing}
+  .mviewport:focus-visible{outline:3px solid var(--ochre);outline-offset:3px}
+  .mtrack{display:flex;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+  .mslide{flex:0 0 100%;min-width:100%;background:var(--paper);color:var(--ink);
+    padding:42px 42px 48px;min-height:540px}
+  @media(max-width:600px){.mslide{padding:32px 24px 38px;min-height:500px}}
+  .m-nav{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:26px}
+  .m-arrow{width:52px;height:52px;border-radius:50%;border:1.6px solid rgba(255,255,255,.28);
+    background:rgba(255,255,255,.08);color:#fff;font-size:24px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:.2s}
+  .m-arrow:hover{background:var(--ochre);color:var(--forest-deep);border-color:var(--ochre)}
+  .m-arrow:focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
+  .m-dots{display:flex;gap:9px;align-items:center}
+  .m-dots button{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.3);
+    cursor:pointer;transition:.25s;padding:0}
+  .m-dots button.on{background:var(--ochre);width:28px;border-radius:10px}
   .m-cat{margin-bottom:38px}
   .m-cat:last-child{margin-bottom:0}
   .m-cat-h{display:flex;align-items:center;gap:14px;margin-bottom:20px}
@@ -178,27 +195,6 @@
   .sig-price b{font-family:'DM Serif Display',serif;font-size:38px;color:var(--ochre-deep)}
   .sig-price span{color:var(--ink-soft);font-size:14px}
   @media(max-width:820px){.sig-body{padding:0 28px}}
-
-  /* ---------- Gallery (horizontal scroll) ---------- */
-  .gal-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:30px;flex-wrap:wrap;gap:14px}
-  .gal-head p{color:var(--ink-soft);font-size:14px}
-  .gscroll{display:flex;gap:18px;overflow-x:auto;padding:6px 26px 22px;margin:0 -26px;scroll-snap-type:x mandatory;
-    scrollbar-width:thin}
-  .gcard{flex:0 0 auto;width:240px;height:320px;border-radius:18px;scroll-snap-align:start;position:relative;
-    overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--line)}
-  .gcard .ge{font-size:62px;transition:transform .4s}
-  .gcard:hover .ge{transform:scale(1.18) rotate(-5deg)}
-  .gcard .gl{position:absolute;bottom:14px;left:16px;color:#fff;font-weight:700;font-size:14px;z-index:2;
-    text-shadow:0 2px 8px rgba(0,0,0,.5)}
-  .gcard::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(12,58,34,.65),transparent 55%)}
-  .gc1{background:linear-gradient(150deg,#f6e6c2,#d99a2b)}
-  .gc2{background:linear-gradient(150deg,#cfe6d2,#15603A)}
-  .gc3{background:linear-gradient(150deg,#f3d9b4,#b87a14)}
-  .gc4{background:linear-gradient(150deg,#d7ecda,#3E8B5B)}
-  .gc5{background:linear-gradient(150deg,#efe2c0,#c2410c)}
-  .gc6{background:linear-gradient(150deg,#cbe3cf,#0C3A22)}
-  .gc7{background:linear-gradient(150deg,#f7ead0,#d99a2b)}
-  .gal-note{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:8px;opacity:.85}
 
   /* ---------- Reviews (single quote on green) ---------- */
   .rev{background:linear-gradient(135deg,#15603A,#0C3A22);color:#fff;text-align:center}
@@ -337,9 +333,14 @@
       <p data-en="Sample prices for this demo. Search to find a dish." data-ta="இந்த டெமோவிற்கான மாதிரி விலைகள். உணவைத் தேட தேடவும்.">Sample prices for this demo. Search to find a dish.</p>
       <div class="m-search"><input type="text" id="search" placeholder="Search dishes…" aria-label="Search dishes"></div>
     </div>
-    <div class="menu-card reveal">
-      <div id="menuBody"></div>
+    <div class="mslider reveal">
+      <div class="mviewport" id="mviewport" tabindex="0" aria-label="Menu by category"><div class="mtrack" id="mtrack"></div></div>
       <div class="m-empty" id="empty" data-en="No dishes match your search." data-ta="உங்கள் தேடலுக்கு உணவு இல்லை.">No dishes match your search.</div>
+      <div class="m-nav">
+        <button class="m-arrow" id="mprev" aria-label="Previous category">‹</button>
+        <div class="m-dots" id="mdots"></div>
+        <button class="m-arrow" id="mnext" aria-label="Next category">›</button>
+      </div>
     </div>
   </div>
 </section>
@@ -354,34 +355,9 @@
         <h3 data-en="Ghee Podi Dosa" data-ta="நெய் பொடி தோசை">Ghee Podi Dosa</h3>
         <p data-en="A crispy golden dosa smeared with pure ghee and our homemade spicy milagai podi, folded hot off the griddle. The one regulars line up for every morning." data-ta="தூய நெய் மற்றும் வீட்டு காரப்பொடியுடன் சூடாக தயாரிக்கப்படும் மொறுமொறு தங்க தோசை. தினமும் காலையில் வரிசையில் நிற்கும் சுவை.">A crispy golden dosa smeared with pure ghee and our homemade spicy milagai podi, folded hot off the griddle. The one regulars line up for every morning.</p>
         <div class="sig-price"><b>₹80</b><span data-en="per plate · with chutney & sambar" data-ta="ஒரு தட்டு · சட்னி & சாம்பாருடன்">per plate · with chutney & sambar</span></div>
-        <a href="#visit" class="btn btn-out btn-lg" data-en="Order on WhatsApp" data-ta="வாட்ஸ்அப்பில் ஆர்டர்">Order on WhatsApp</a>
+        <a href="https://wa.me/919787528666" target="_blank" rel="noopener" class="btn btn-out btn-lg" data-en="Order on WhatsApp" data-ta="வாட்ஸ்அப்பில் ஆர்டர்">Order on WhatsApp</a>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- GALLERY -->
-<section style="padding-top:0">
-  <div class="wrap">
-    <div class="gal-head reveal">
-      <div>
-        <span class="eyebrow" data-en="Gallery" data-ta="படத்தொகுப்பு">Gallery</span>
-        <h2 class="h2" data-en="Fresh off the griddle" data-ta="அடுப்பிலிருந்து நேரடியாக">Fresh off the griddle</h2>
-      </div>
-      <p data-en="← Swipe to see more →" data-ta="← மேலும் பார்க்க தேய்க்கவும் →">← Swipe to see more →</p>
-    </div>
-  </div>
-  <div class="wrap">
-    <div class="gscroll reveal">
-      <div class="gcard gc1"><span class="ge">🫓</span><span class="gl" data-en="Masala Dosa" data-ta="மசாலா தோசை">Masala Dosa</span></div>
-      <div class="gcard gc2"><span class="ge">🍛</span><span class="gl" data-en="Veg Meals" data-ta="சைவ மீல்ஸ்">Veg Meals</span></div>
-      <div class="gcard gc3"><span class="ge">🍩</span><span class="gl" data-en="Medu Vada" data-ta="மெது வடை">Medu Vada</span></div>
-      <div class="gcard gc4"><span class="ge">☕</span><span class="gl" data-en="Filter Coffee" data-ta="பில்டர் காபி">Filter Coffee</span></div>
-      <div class="gcard gc5"><span class="ge">🍚</span><span class="gl" data-en="Ghee Pongal" data-ta="நெய் பொங்கல்">Ghee Pongal</span></div>
-      <div class="gcard gc6"><span class="ge">🥞</span><span class="gl" data-en="Uttapam" data-ta="ஊத்தப்பம்">Uttapam</span></div>
-      <div class="gcard gc7"><span class="ge">🍮</span><span class="gl" data-en="Kesari" data-ta="கேசரி">Kesari</span></div>
-    </div>
-    <p class="gal-note" data-en="✦ Demo visuals — real food photos go here once the shop shares them." data-ta="✦ மாதிரி படங்கள் — உண்மையான புகைப்படங்கள் இங்கே வரும்.">✦ Demo visuals — real food photos go here once the shop shares them.</p>
   </div>
 </section>
 
@@ -427,7 +403,7 @@
         <div class="opennow"><span class="d"></span><span data-en="Open now · till 10:30 PM" data-ta="இப்போது திறந்துள்ளது · இரவு 10:30 வரை">Open now · till 10:30 PM</span></div>
         <h3 data-en="Reach us" data-ta="தொடர்பு">Reach us</h3>
         <div class="vrow"><div class="vic">📍</div><div><b data-en="Address" data-ta="முகவரி">Address</b><span>Pudukkottai, Tamil Nadu</span></div></div>
-        <div class="vrow"><div class="vic">📞</div><div><b data-en="Phone" data-ta="தொலைபேசி">Phone</b><span style="font-style:italic" data-en="Demo — real number added on confirmation" data-ta="டெமோ — உறுதி செய்தவுடன் உண்மையான எண்">Demo — real number added on confirmation</span></div></div>
+        <div class="vrow"><div class="vic">📞</div><div><b data-en="Phone" data-ta="தொலைபேசி">Phone</b><a href="tel:+919787528666" style="color:var(--ochre-deep);font-weight:700">+91 97875 28666</a></div></div>
         <div class="vrow"><div class="vic">🗺️</div><div><b data-en="Directions" data-ta="வழி">Directions</b><a href="https://www.google.com/maps/search/?api=1&query=Aiswaryaa+Hotel+Pudukkottai" target="_blank" rel="noopener" style="color:var(--ochre-deep);font-weight:700" data-en="Open in Google Maps →" data-ta="கூகுள் வரைபடத்தில் →">Open in Google Maps →</a></div></div>
       </div>
       <div class="vi">
@@ -453,14 +429,14 @@
       <a href="#reviews" data-en="Reviews" data-ta="மதிப்புரை">Reviews</a>
       <a href="#visit" data-en="Visit" data-ta="வாருங்கள்">Visit</a>
     </div>
-    <p class="demo-note" data-en="✦ This is a demo website proposal. Menu, prices, photos & contact details are samples and will be replaced with the shop's real information." data-ta="✦ இது ஒரு டெமோ முன்மொழிவு. மெனு, விலை, படங்கள் மற்றும் தொடர்பு விவரங்கள் மாதிரிகள், உண்மையான தகவலுடன் மாற்றப்படும்.">✦ This is a demo website proposal. Menu, prices, photos & contact details are samples and will be replaced with the shop's real information.</p>
+    <p class="demo-note" data-en="✦ This is a demo website proposal. Menu, prices & photos are samples and will be replaced with the shop's real information." data-ta="✦ இது ஒரு டெமோ முன்மொழிவு. மெனு, விலை மற்றும் படங்கள் மாதிரிகள், உண்மையான தகவலுடன் மாற்றப்படும்.">✦ This is a demo website proposal. Menu, prices & photos are samples and will be replaced with the shop's real information.</p>
   </div>
 </footer>
 
 <!-- MOBILE BAR -->
 <div class="mbar">
-  <a href="tel:" class="btn c" data-en="📞 Call" data-ta="📞 அழை">📞 Call</a>
-  <a href="https://wa.me/" target="_blank" rel="noopener" class="btn w" data-en="WhatsApp" data-ta="வாட்ஸ்அப்">WhatsApp</a>
+  <a href="tel:+919787528666" class="btn c" data-en="📞 Call" data-ta="📞 அழை">📞 Call</a>
+  <a href="https://wa.me/919787528666" target="_blank" rel="noopener" class="btn w" data-en="WhatsApp" data-ta="வாட்ஸ்அப்">WhatsApp</a>
   <a href="https://www.google.com/maps/search/?api=1&query=Aiswaryaa+Hotel+Pudukkottai" target="_blank" rel="noopener" class="btn d" data-en="📍 Map" data-ta="📍 வரைபடம்">📍 Map</a>
 </div>
 
@@ -518,30 +494,55 @@
     {cat:'drinks', en:'Kesari', ta:'கேசரி', den:'Saffron semolina sweet.', dta:'குங்குமப்பூ ரவா இனிப்பு.', p:'₹30'}
   ];
   var BADGE = {pop:{en:'Popular',ta:'பிரபலம்'}, hot:{en:'Spicy',ta:'காரம்'}};
-  var body = document.getElementById('menuBody'), empty = document.getElementById('empty'), q = '';
+  var track = document.getElementById('mtrack'), viewport = document.getElementById('mviewport'),
+      dotsEl = document.getElementById('mdots'), empty = document.getElementById('empty'),
+      mprev = document.getElementById('mprev'), mnext = document.getElementById('mnext'),
+      mnav = document.querySelector('.m-nav'), q = '', idx = 0, count = 0;
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function renderMenu(){
-    var query = q.toLowerCase(), html = '', any = false;
+    var query = q.toLowerCase();
+    track.innerHTML = ''; dotsEl.innerHTML = ''; count = 0;
     cats.forEach(function(c){
       var items = dishes.filter(function(d){
         return d.cat===c.id && (!query || (d.en+' '+d.ta+' '+d.den).toLowerCase().indexOf(query)>-1);
       });
-      if(!items.length) return; any = true;
-      html += '<div class="m-cat"><div class="m-cat-h"><span class="ic">'+c.ic+'</span><h3>'+esc(lang==='ta'?c.ta:c.en)+'</h3></div>';
-      items.forEach(function(d){
+      if(!items.length) return;
+      var rows = items.map(function(d){
         var name = lang==='ta'?d.ta:d.en, alt = lang==='ta'?d.en:d.ta, desc = lang==='ta'?d.dta:d.den;
         var badge = d.tag ? '<span class="m-badge '+d.tag+'">'+BADGE[d.tag][lang]+'</span>' : '';
-        html += '<div class="m-row"><span class="vd"></span><div class="m-info">'+
+        return '<div class="m-row"><span class="vd"></span><div class="m-info">'+
           '<div class="m-name">'+esc(name)+'<span class="tn">'+esc(alt)+'</span>'+badge+'</div>'+
           '<div class="m-desc">'+esc(desc)+'</div></div>'+
           '<span class="lead"></span><span class="m-price">'+esc(d.p)+'</span></div>';
-      });
-      html += '</div>';
+      }).join('');
+      var slide = document.createElement('div'); slide.className = 'mslide';
+      slide.innerHTML = '<div class="m-cat-h"><span class="ic">'+c.ic+'</span><h3>'+esc(lang==='ta'?c.ta:c.en)+'</h3></div>'+rows;
+      track.appendChild(slide);
+      var b = document.createElement('button'); b.setAttribute('aria-label', lang==='ta'?c.ta:c.en);
+      (function(i){ b.addEventListener('click', function(){ go(i); }); })(count);
+      dotsEl.appendChild(b);
+      count++;
     });
-    body.innerHTML = html;
-    empty.style.display = any ? 'none' : 'block';
+    empty.style.display = count ? 'none' : 'block';
+    mnav.style.display = count > 1 ? 'flex' : 'none';
+    if(idx >= count) idx = 0;
+    update();
   }
-  document.getElementById('search').addEventListener('input', function(e){ q = e.target.value; renderMenu(); });
+  function update(){
+    track.style.transform = 'translateX(-'+(idx*100)+'%)';
+    dotsEl.querySelectorAll('button').forEach(function(b,i){ b.classList.toggle('on', i===idx); });
+  }
+  function go(i){ if(!count) return; idx = (i+count)%count; update(); }
+  mprev.addEventListener('click', function(){ go(idx-1); });
+  mnext.addEventListener('click', function(){ go(idx+1); });
+  document.getElementById('search').addEventListener('input', function(e){ q = e.target.value; idx = 0; renderMenu(); });
+  // swipe
+  var sx=0, dx=0, drag=false;
+  viewport.addEventListener('pointerdown', function(e){ drag=true; sx=e.clientX; dx=0; });
+  window.addEventListener('pointermove', function(e){ if(drag) dx=e.clientX-sx; });
+  window.addEventListener('pointerup', function(){ if(!drag) return; drag=false; if(Math.abs(dx)>50) go(idx+(dx<0?1:-1)); });
+  // keyboard
+  viewport.addEventListener('keydown', function(e){ if(e.key==='ArrowLeft') go(idx-1); else if(e.key==='ArrowRight') go(idx+1); });
 
   /* Reviews carousel */
   var slides = document.querySelectorAll('.rev-slide'), dotsW = document.getElementById('revDots'), ri = 0, timer;
